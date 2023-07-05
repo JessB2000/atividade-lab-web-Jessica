@@ -42,7 +42,7 @@ export interface Remove {
 
 export interface Add {
   type: TarefaActionsType["add"];
-  payload: {};
+  payload: object;
 }
 
 export interface Write {

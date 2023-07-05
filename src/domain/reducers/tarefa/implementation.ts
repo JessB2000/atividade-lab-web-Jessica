@@ -1,18 +1,32 @@
 import { Actor, AllActions, Remove, Search, Toggle, Write, Add, TarefaActionsEnum, TarefasState } from "./types";
 
-export const makeInitialTarefaState = (): TarefasState => ({
-  tarefas: [],
-  error: "",
-  name: "",
-  search: "",
-});
+export const makeInitialTarefaState = (): TarefasState => {
+  const storedTarefas = localStorage.getItem("tarefas");
 
-export const removeTask: Actor<Remove> = (state, action) => {
+  if (storedTarefas) {
+    return JSON.parse(storedTarefas);
+  }
+
   return {
-    ...state,
-    tarefas: state.tarefas.filter((tarefa) => tarefa.id !== action.payload.id),
+    tarefas: [],
+    error: "",
+    name: "",
+    search: "",
   };
 };
+
+export const removeTask: Actor<Remove> = (state, action) => {
+  const updatedTarefas = state.tarefas.filter(
+    (tarefa) => tarefa.id !== action.payload.id
+  );
+  localStorage.setItem("tarefas", JSON.stringify(updatedTarefas));
+
+  return {
+    ...state,
+    tarefas: updatedTarefas,
+  };
+};
+
 
 export const toggleTask: Actor<Toggle> = (state, action) => {
   return {
@@ -54,17 +68,20 @@ export const addTask: Actor<Add> = (state) => {
     return state;
   }
 
+  const newTarefa = {
+    id: (state.tarefas.length + 1).toString(),
+    name: state.name,
+    done: false,
+    createdAt: new Date(),
+    deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Definindo o prazo de uma semana a partir da data atual
+  };
+
+  const updatedTarefas = [...state.tarefas, newTarefa];
+  localStorage.setItem("tarefas", JSON.stringify(updatedTarefas));
+
   return {
     ...state,
-    tarefas: [
-      ...state.tarefas,
-      {
-        id: (state.tarefas.length + 1).toString(),
-        name: state.name,
-        done: false,
-        createdAt: new Date(),
-      },
-    ],
+    tarefas: updatedTarefas,
     error: "",
     name: "",
   };

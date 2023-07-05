@@ -8,7 +8,7 @@ interface Props {
   onTextChange: (name: string) => void;
 }
 
-export const AddItem = ({ error, name, onTextChange, onAdd }: Props) => {
+export const AddItem = ({ error = "", name, onTextChange, onAdd }: Props) => {
   const hasError = error.length > 0;
 
   const inputRef = useRef<HTMLInputElement>(null);

@@ -24,6 +24,12 @@ export const TarefaPage = ({ appState }: Props) => {
     return <TarefaNotFound navigate={navigate} />;
   }
 
+  function isDeadlineNear(deadline: Date) {
+    const currentTime = Date.now();
+    const differenceInDays = Math.ceil((deadline.getTime() - currentTime) / (1000 * 60 * 60 * 24));
+    return differenceInDays <= 3; 
+  }  
+
   return (
     <>
       <MyAppBar>
@@ -72,24 +78,30 @@ export const TarefaPage = ({ appState }: Props) => {
               borderRadius: 10,
             }}
           />
-
           <section>
-            <Typography variant="body1">
-              Feita? {tarefa.done ? "👍" : "Nop 👎"}
-            </Typography>
-            <Typography variant="body1">
-              Data de Criação:
-              {format(tarefa.createdAt, " eeee, dd/MM/yyyy HH:mm", {
-                locale: ptBR,
-              })}
-            </Typography>
-            <Typography variant="body1">
-              {formatDistance(tarefa.createdAt, new Date(), {
-                addSuffix: true,
-                locale: ptBR,
-              })}
-            </Typography>
-          </section>
+  <Typography variant="body1">
+    Feita? {tarefa.done ? "👍" : "Nop 👎"}
+  </Typography>
+  <Typography variant="body1">
+    Data de Criação:
+    {format(tarefa.createdAt, " eeee, dd/MM/yyyy HH:mm", {
+      locale: ptBR,
+    })}
+  </Typography>
+  <Typography variant="body1">
+    {formatDistance(tarefa.createdAt, new Date(), {
+      addSuffix: true,
+      locale: ptBR,
+    })}
+  </Typography>
+  <Typography variant="body1" color={isDeadlineNear(tarefa.deadline) ? "red" : "inherit"}>
+    Data Limite:
+    {format(tarefa.deadline, " eeee, dd/MM/yyyy HH:mm", {
+      locale: ptBR,
+    })}
+  </Typography>
+</section>
+
         </div>
       </main>
     </>

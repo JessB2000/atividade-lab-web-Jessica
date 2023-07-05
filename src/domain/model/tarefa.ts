@@ -3,7 +3,9 @@ export interface Tarefa {
   name: string;
   done: boolean;
   createdAt: Date;
+  deadline: Date; 
 }
+
 
 export const makeSearchByName = (search: string) => ({ name }: Tarefa) => {
   if (search === "") {

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Typography } from "@mui/material";
-
+import { useEffect } from "react";
 import {
   AllActions,
   TarefaActionsEnum,
@@ -18,6 +18,10 @@ interface Props {
 }
 
 export function Home({ appState, dispatch }: Props) {
+  useEffect(() => {
+    localStorage.setItem("tarefas", JSON.stringify(appState.tarefas));
+  }, [appState.tarefas]);
+
   const navigate = useNavigate();
 
   const onTextChange = (name: string) => {
